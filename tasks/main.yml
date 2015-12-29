@@ -1,0 +1,71 @@
+---
+# tasks file for ansible-lxcm
+#
+
+# lxc.ustname = {{ lxc_hostname }}
+- debug: var=lxcm_containers
+
+# - debug: var=lxc_users
+
+# - debug: var=hostvars
+
+# - fail:
+
+# - debug: var=lxcm_state
+
+- name: register available containers on target host
+  command: lxc-ls
+  register: lxcm_existing_containers
+  always_run: true
+
+- debug: var=lxcm_existing_containers
+- debug: var=lxcm_existing_containers.stdout
+
+- name: create container (download image if unexisting)
+  lxc_container:
+    name: "{{ item.name }}"
+    state: started
+    container_log: "{{ item.container_log|default('false') }}"
+    container_log_level: "{{ item.container_log_level|default('INFO') }}"
+    template: "{{ item.template|default('ubuntu') }}"
+    template_options: "{{ item.template_option|default('--release trusty') }}"
+    container_command: |
+      for u in {{ lxc_users|join(' ') }}
+      do
+        useradd --groups adm,users --create-home $u
+      done
+  with_items: lxcm_containers
+  when: (lxcm_state != "absent") and (item.name not in lxcm_existing_containers.stdout)
+
+- name: inject ssh key in each container
+  lineinfile:
+    state: present
+    create: yes
+    line: "{{ lookup('file', item.1) }}"
+    user: "{{ item.0.name }}"
+    group: {{ item.0.name }}"
+    dest: "{{ lxcm_container_path|default('/var/lib/lxc/') }}/rootfs/home/{{ item.0.name }}/.config/authorized_keys"
+    with_subelements:
+    - users
+    - authorized
+    when: authorized is defined and (item.0.lxc_admins == yes)
+
+# # Resets the container user's password using lxc_container because Python2.7
+# #  may not be installed at this point.
+# - name: reset container password
+#   lxc_container:
+#     name: "{{ item.name }}"
+#     container_command: |
+#       getent passwd "{{ item.name }}" &&
+#       echo "{{ item.name }}:{{ item.passwd }}" | chpasswd
+#   # delegate_to: "{{ localhost }}"
+#   with_items: lxcm_containers
+#   when: lxcm_state != "absent"
+#   no_log: True
+
+- name: apply lxc container(s) state
+  lxc_container:
+    name: "{{ item.name }}"
+    state: "{{ lxcm_state }}"
+  with_items: lxcm_containers
+
