@@ -3,3 +3,8 @@
 
 # lxcm_container_path:
 
+private_dir: "{{ playbook_dir }}/private"
+
+lxcm_default_grp: "{{ ansible_hostname }}_c"
+lxcm_child_grp: all_c
+lxcm_default_domain: "lxc"
