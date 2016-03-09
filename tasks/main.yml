@@ -6,9 +6,14 @@
   register: lxcm_existing_containers
   always_run: true
 
+# - debug: msg={{item.name}}
+#   with_items: "{{lxcm_containers}}"
+
+# - fail:
+
 - name: create container (download image if unexisting)
   lxc_container:
-    name: "{{ item.name }}"
+    name: "{{item.name}}"
     state: started
     container_log: "{{ item.container_log|default('false') }}"
     container_log_level: "{{ item.container_log_level|default('INFO') }}"
@@ -27,10 +32,10 @@
         useradd --groups adm,users --create-home $u
         {% endif %}
       done
-  with_items: lxcm_containers
+  with_items: "{{lxcm_containers}}"
   when: (lxcm_state != "absent") and (item.name not in lxcm_existing_containers.stdout)
 
-- name: inject a plublic ssh key in each container for each lxc_users
+- name: inject a plublic ssh key in each container for each "{{lxc_users}}"
   lineinfile:
     state: present
     create: yes
@@ -39,29 +44,29 @@
     group: "{{ item.1.name }}"
     dest: "{{ lxcm_container_path|default('/var/lib/lxc/') }}/{{ item.0.name }}/rootfs/home/{{ item.1.name }}/.ssh/authorized_keys"
   with_nested:
-    - lxcm_containers
-    - lxc_users
+    - "{{lxcm_containers}}"
+    - "{{lxc_users}}"
   when: (lxcm_state != "absent") and (item.0.name not in lxcm_existing_containers.stdout)
 
 - name: generate inventory of containers
   add_host:
     name: "{{ item.name }}.{{ lxcm_domain }}"
     groups: "{{ item.grp|default(lxcm_default_grp) }}"
-  with_items: lxcm_containers
+  with_items: "{{lxcm_containers}}"
   when: lxcm_state != "absent"
 
 - name: generate child group of containers
   add_host:
     name: "{{ item.name }}.{{ lxcm_domain }}"
     groups: "{{ lxcm_child_grp }}"
-  with_items: lxcm_containers
+  with_items: "{{lxcm_containers}}"
   when: lxcm_state != "absent"
 
 - name: apply lxc container(s) state
   lxc_container:
     name: "{{ item.name }}"
     state: "{{ lxcm_state }}"
-  with_items: lxcm_containers
+  with_items: "{{lxcm_containers}}"
 
 # - debug: var=groups.lxcm_child_grp
 # - name: wait for lxc guests to be ssh ready
