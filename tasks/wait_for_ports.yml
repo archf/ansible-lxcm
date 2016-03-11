@@ -1,0 +1,12 @@
+---
+
+- name: wait for container to get an ip // ssh port to be ready
+  wait_for:
+    port: 22
+    host: "{{item}}"
+    state: started
+    timeout: 60
+    search_regex: OpenSSH
+  delegate_to: localhost
+  with_inventory_hostnames: "{{lxcm_child_grp}}"
+  when: lxcm_state != "absent" and item not in lxcm_existing_containers.stdout
