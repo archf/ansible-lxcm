@@ -45,6 +45,7 @@
         {% if item.template is defined and item.template == 'centos' %}
         useradd --groups adm,users,wheel --create-home $u
         yum -y install sudo
+        echo "includedir /etc/sudoers.d" >> /etc/sudoers
         echo "%wheel   ALL=(ALL)   NOPASSWD: ALL" >> /etc/sudoers.d/wheel
         {% elif item.template is defined and item.template == 'fedora' %}
         useradd --groups adm,users,wheel --create-home $u
