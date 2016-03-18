@@ -20,36 +20,18 @@ Role Variables
 defaults/main.yml:
 
 ```yaml
-lxc_pkg_state: installed
-```
-
-vars/Debian.yml:
-
-```yaml
-lxc_packages:
-  - lxc
-  - lxc-templates
-  - python3-lxc
-```
-
-vars/RedHat.yml:
-
-```yaml
-lxc_packages:
-  - lxc
-  - lxc-extra
-  - lxc-templates
-```
+lxcm_default_grp: "{{ ansible_hostname }}_c"
+lxcm_child_grp:
+  - "all_c"
+lxcm_domain: "lxc"
 
 Dependencies
 ------------
 
-None.
+It requires a working lxc installation.
 
 Example Playbook
 ----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
 ```yaml
     - hosts: servers

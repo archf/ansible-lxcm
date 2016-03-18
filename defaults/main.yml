@@ -1,10 +1,13 @@
 ---
 # defaults file for ansible-lxcm
 
-# lxcm_container_path:
-
 private_dir: "{{ playbook_dir }}/private"
 
 lxcm_default_grp: "{{ ansible_hostname }}_c"
-lxcm_child_grp: all_c
+
+# default container group to add container instance to
+lxcm_child_grp:
+  - "all_c"
+
+# default dns domain (used when generating inventory dynamically)
 lxcm_domain: "lxc"
