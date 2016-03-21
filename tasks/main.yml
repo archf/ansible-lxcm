@@ -82,14 +82,9 @@
   when: (lxcm_state == "reloaded") or (lxcm_state != "stopped" and lxcm_state != "absent" and lxcm_state != "frozen" and lxcm_state != "reloaded" )
 
 # check if containers needs to be reprovisioned
-
-- set_fact: lxcm_provision=false
-
-- name: compute lxcm_provision (boolean)
+- name: set lxcm_provision (boolean)
   set_fact:
     lxcm_provision: true
   when: (lxcm_state == "reloaded") or (lxcm_state != "stopped" and lxcm_state != "absent" and lxcm_state != "frozen" and lxcm_state != "reloaded" )
   with_items: "{{lxcm_containers}}"
   always_run: true
-
-# - debug: var=lxcm_provision

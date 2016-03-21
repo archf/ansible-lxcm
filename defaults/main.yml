@@ -11,3 +11,7 @@ lxcm_child_grp:
 
 # default dns domain (used when generating inventory dynamically)
 lxcm_domain: "lxc"
+
+# boolean to figure if we need to reprovision or not. Value dependends on
+# lxcm_state.
+lxcm_provision: false
