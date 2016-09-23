@@ -1,46 +1,20 @@
 ---
 galaxy_info:
   author: Felix Archambault
-  description: An ansible role to manage lxc containers on a host.
-  # Some suggested licenses:
-  # - BSD (default)
-  # - MIT
+  description: A role to manage lxc containers on a host.
   license: MIT
-  min_ansible_version: 1.8
-  #
-  # Below are all platforms currently available. Just uncomment
-  # the ones that apply to your role. If you don't see your
-  # platform on this list, let us know and we'll get it added!
-  #
-  #platforms:
-  #- name: EL
-  #  versions:
-  #  - all
-  #  - 5
-  #  - 6
-  #  - 7
-  #- name: Fedora
-  #  versions:
-  #  - all
-  #  - 16
-  #  - 17
-  #  - 18
-  #  - 19
-  #  - 20
-  #  - 21
-  #  - 22
-  #- name: Ubuntu
-  #  versions:
-  #  - trusty
-  #  - utopic
-  #  - vivid
-  #
-  # Below are all categories currently available. Just as with
-  # the platforms above, uncomment those that apply to your role.
-  #
-  categories:
+  min_ansible_version: 2.0
+  platforms:
+  - name: Fedora
+    versions:
+    - 22
+    - 23
+  - name: Ubuntu
+    versions:
+    - trusty
+
+  galaxy_tags:
     - system
+    - containers
+
 dependencies: []
-  # List your role dependencies here, one per line.
-  # Be sure to remove the '[]' above if you add dependencies
-  # to this list.

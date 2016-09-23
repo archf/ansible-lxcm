@@ -1,0 +1,30 @@
+---
+github_account: archf
+# requirements:
+description: |
+  The goal is to get vagrant, vagrant-lxc, livirt-lxc out of the way.
+  Define useful alias
+
+  ```bash
+  # start container (akin to vagrant up)
+  alias acu="ansible -i local -e lxcm_state=started"
+
+  # start container (akin to vagrant halt)
+  alias ach="ansible -i local -e lxcm_state=stopped"
+
+  # start container (akin to vagrant reload)
+  alias acu="ansible -i local -e lxcm_state=restarted"
+
+  # start container (akin to vagrant destroy)
+  alias acd="ansible -i local -e lxcm_state=absent"
+
+  # freeze container
+  alias acu="ansible -i local -e lxcm_state=frozen"
+  ```
+
+todos: []
+role_stack: |
+  This role was carefully selected to be part an ultimate deck of roles to manage
+  your infrastructure.
+
+  All roles' documentation is wrapped in this [convenient guide](http://127.0.0.1:8000/).
